@@ -1,23 +1,32 @@
-name: Pylint
+from staff import Staff  # 导入Staff类
 
-on: [push]
+class Restaurant:
+    def __init__(self, name):
+        self.name = name
+        self.__staffs = []  # 初始化为空列表，用于存储员工信息
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pylint
-    - name: Analysing the code with pylint
-      run: |
-        pylint $(git ls-files '*.py')
+    def add_staff(self, *staffs):
+        for staff in staffs:
+            if isinstance(staff, Staff):
+                self.__staffs.append(staff)
+                print(f"{staff.name} 已加入 {self.name} 餐厅")
+
+    def print_staffs(self):
+        print(f"{self.name} 餐厅员工列表:")
+        for staff in self.__staffs:
+            print(f"姓名：{staff.name}，工作：{staff.job}，工资：{staff.pay}")
+
+# 创建实例并测试
+if __name__ == "__main__":
+    # 创建一个餐厅实例
+    res1 = Restaurant("Happy Food")
+
+    # 创建Staff实例
+    bob = Staff('Bob Smith')
+    sue = Staff('Sue Jones', 'dev', 10000)
+
+    # 将bob和sue添加至餐厅的staffs属性中
+    res1.add_staff(bob, sue)
+
+    # 输出员工信息
+    res1.print_staffs()
